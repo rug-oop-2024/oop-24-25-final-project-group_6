@@ -50,7 +50,7 @@ class Model(BaseModel, ABC):
         :returns:
             Deepcopy of private _hyperparameters attribute to prevent leakage
         """
-        return deepcopy(self._params)
+        return deepcopy(self._hyperparameters)
 
     @property
     def type(self) -> str:

@@ -43,6 +43,16 @@ class Model(BaseModel, ABC):
         return deepcopy(self._params)
 
     @property
+    def hyperparameters(self) -> dict:
+        """
+        Getter function for the private _hyperparameters attribute
+
+        :returns:
+            Deepcopy of private _hyperparameters attribute to prevent leakage
+        """
+        return deepcopy(self._params)
+
+    @property
     def type(self) -> str:
         """
         Getter function for the private _type attribute

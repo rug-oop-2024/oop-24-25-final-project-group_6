@@ -154,14 +154,14 @@ If you did not implement the feature
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|--------------------------|---------|         
 | Up-to-date requirements.txt           | NF           |                      |         | |
-| `ML/detect-features`                  | FN           |                      |         | |
-| `ML/artifact`                         | NF           |                      |         | |
-| `ML/feature`                          | NF           |                      |         | |
-| `ML/metric`                           | NF           |                      |         | |
-| `ML/metric/extensions`                | FN           |                      |         | |
-| `ML/model`                            | NF           |                      |         | |
-| `ML/model/extensions`                 | FN           |                      |         | |
-| `ML/pipeline/evaluation`              | FN           |                      |         | | 
+| `ML/detect-features`                  | FN           | Daan                 |         | |
+| `ML/artifact`                         | NF           | Daan                 |         | |
+| `ML/feature`                          | NF           | Daan                 |         | |
+| `ML/metric`                           | NF           | Yi                   |         | |
+| `ML/metric/extensions`                | FN           | Yi                   |         | |
+| `ML/model`                            | NF           | Daan                 |         | |
+| `ML/model/extensions`                 | FN           | Yi                   |         | |
+| `ML/pipeline/evaluation`              | FN           | Yi                   |         | | 
 | `ST/page/datasets`                    | NF           |                      |         | |
 | `ST/datasets/management/create`       | FN           |                      |         | |
 | `ST/datasets/management/save`         | FN           |                      |         | |

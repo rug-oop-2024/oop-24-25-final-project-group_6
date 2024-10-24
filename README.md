@@ -162,21 +162,21 @@ If you did not implement the feature
 | `ML/model`                            | NF           | Daan                 |         | |
 | `ML/model/extensions`                 | FN           | Yi                   |         | |
 | `ML/pipeline/evaluation`              | FN           | Yi                   |         | | 
-| `ST/page/datasets`                    | NF           |                      |         | |
+| `ST/page/datasets`                    | NF           | Daan                 |         | |
 | `ST/datasets/management/create`       | FN           |                      |         | |
 | `ST/datasets/management/save`         | FN           |                      |         | |
 | `ST/page/modelling`                   | NF           |                      |         | |
 | `ST/modelling/datasets/list`          | FN           |                      |         | |
 | `ST/modelling/datasets/features`      | FN           |                      |         | |
-| `ST/modelling/models`                 | FN           |                      |         | |
-| `ST/modelling/pipeline/split`         | FN           |                      |         | |
+| `ST/modelling/models`                 | FN           | Daan                 |         | |
+| `ST/modelling/pipeline/split`         | FN           | Yi                   |         | |
 | `ST/modelling/pipeline/metrics`       | FN           |                      |         | |
 | `ST/modelling/pipeline/summary`       | FN           |                      |         | |
 | `ST/modelling/pipeline/train`         | FN           |                      |         | |
 | `ST/modelling/pipeline/save`          | FN           |                      |         | |
 | `ST/page/deployment`                  | FN           |                      |         | |
 | `ST/deployment/load`                  | FN           |                      |         | |
-| `ST/deployment/predict`               | FN           |                      |         | |
+| `ST/deployment/predict`               | FN           | Yi                   |         | |
 
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |

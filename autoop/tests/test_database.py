@@ -1,9 +1,20 @@
 import unittest
 
-from autoop.core.database import Database
-from autoop.core.storage import LocalStorage
 import random
 import tempfile
+import os
+import sys
+
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+functional_dir = os.path.dirname(current_dir)
+auto_oop_dir = os.path.dirname(functional_dir)
+sys.path.insert(0, auto_oop_dir)
+
+
+from autoop.core.database import Database
+from autoop.core.storage import LocalStorage
+
 
 class TestDatabase(unittest.TestCase):
 
@@ -50,3 +61,6 @@ class TestDatabase(unittest.TestCase):
         self.db.set("collection", key, value)
         # collection should now contain the key
         self.assertIn((key, value), self.db.list("collection"))
+
+if __name__ == "__main__":
+    unittest.main()

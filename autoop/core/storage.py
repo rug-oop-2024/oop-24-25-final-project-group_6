@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 import os
-from typing import List, Union
+from typing import List
 from glob import glob
+import regex as re
 
 class NotFoundError(Exception):
     def __init__(self, path):
@@ -50,20 +51,28 @@ class Storage(ABC):
         """
         pass
 
-
 class LocalStorage(Storage):
 
-    def __init__(self, base_path: str="./assets"):
-        self._base_path = base_path
+    def __init__(self, base_path: str = "./assets"):
+        self._base_path = os.path.normpath(base_path)
         if not os.path.exists(self._base_path):
             os.makedirs(self._base_path)
 
     def save(self, data: bytes, key: str):
         path = self._join_path(key)
-        if not os.path.exists(path):
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'wb') as f:
-            f.write(data)
+        # Ensure parent directories are created
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        try:
+            with open(path, 'wb') as f:
+                f.write(data)
+        except FileNotFoundError as e:
+            print(f"Error: The specified file or directory was not found: {e}")
+        except PermissionError as e:
+            print(f"Error: Permission denied. Cannot write to the specified file or directory: {e}")
+        except OSError as e:
+            print(f"Error: An OS-related error occurred, possibly due to disk space issues or file system corruption: {e}")
+        except TypeError as e:
+            print(f"Error: Invalid data type provided for writing. Ensure data is in bytes: {e}")
 
     def load(self, key: str) -> bytes:
         path = self._join_path(key)
@@ -71,23 +80,27 @@ class LocalStorage(Storage):
         with open(path, 'rb') as f:
             return f.read()
 
-    def delete(self, key: str="/"):
-        self._assert_path_exists(self._join_path(key))
+    def delete(self, key: str = "/"):
         path = self._join_path(key)
+        self._assert_path_exists(path)
         os.remove(path)
 
-    def list(self, prefix: str) -> List[str]:
+    def list(self, prefix: str = "/") -> List[str]:
         path = self._join_path(prefix)
         self._assert_path_exists(path)
-        keys = glob(path + "/**/*", recursive=True)
-        return list(filter(os.path.isfile, keys))
+        # Use os.path.join for compatibility across platforms
+        keys = glob(os.path.join(path, "**", "*"), recursive=True)
+        return [os.path.relpath(p, self._base_path) for p in keys if os.path.isfile(p)]
 
     def _assert_path_exists(self, path: str):
         if not os.path.exists(path):
             raise NotFoundError(path)
-    
+
     def _join_path(self, path: str) -> str:
-        return os.path.join(self._base_path, path)
-
-
-    
+        rest_path = ""
+        if re.match(r'^[CDEF]:', path):
+            rest_path = path[:2]
+            path = path[2:]
+        os_agnostic_path = re.sub(r'[<>":|?*]', '_', path)
+        os_agnostic_path = rest_path + os_agnostic_path
+        return os.path.abspath(os.path.normpath(os.path.join(self._base_path, os_agnostic_path)))

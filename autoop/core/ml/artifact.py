@@ -1,7 +1,8 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field
 from pydantic import PrivateAttr
 import base64
+import pandas as pd
 
 
 class Artifact(BaseModel):
@@ -42,42 +43,45 @@ class Artifact(BaseModel):
 
     name: Optional[str] = Field(default_factory=str)
     type: Optional[str] = Field(default_factory=str)
-    id: Optional[str] = Field(default_factory=None)
+    id: Optional[str] = Field(default_factory=str)
 
     _asset_path: Optional[str] = PrivateAttr(default_factory=str)
+    _metadata: Optional[str] = PrivateAttr(default_factory=dict)
     _data: Optional[bytes] = PrivateAttr(default_factory=bytes)
     _version: Optional[str] = PrivateAttr(default="1.0.0")
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, name, data, **kwargs) -> None:
         """
-        Initialisor method of
+        Initialisor method of artifact class
         """
         super().__init__(**kwargs)
 
-    @root_validator(pre=True)
-    def set_id(cls, values):
-        """
-        Sets the id attribute.
+        self.data = data
+        self.name = name
+        self.version = kwargs.pop("version", "1.0.0")
+        self.asset_path = kwargs.pop("asset_path", str)
+        self.metadata = kwargs.pop("metadata", dict)
 
-        Method that is ran, before the actual fields of pydantic are validated.
-        This method is used tp make modifactions to the raw data of id before
-        fields are valided.
-        """
-        asset_path = values.get("_asset_path", "")
-        version = values.get("_version", "1.0.0")
-        values['id'] = f"{base64.b64encode(asset_path.encode()).decode()}:{version}"
-        return values
+        self.id = f"{base64.b64encode(self.asset_path.encode()).decode()}:{self.version}"
+
+    @property
+    def metadata(self) -> dict:
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, value: dict) -> None:
+        if isinstance(value, dict):
+            self._metadata = value
 
     @property
     def data(self) -> str:
         return self._data
 
     @data.setter
-    def data(self, value: str) -> None:
+    def data(self, value: bytes) -> None:
         if isinstance(value, bytes):
             self._data = value
         else:
-            print("Is ran")
             raise ValueError(f"Invalid data type: '{value}'. "
                              "Please store data in type bytes.")
 
@@ -114,4 +118,4 @@ class Artifact(BaseModel):
                              "Please use the 'x.y.z' format, e.g., '1.0.0'.")
 
     def read(self) -> bytes:
-        return self.data
+        return self._data

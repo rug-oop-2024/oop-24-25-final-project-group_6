@@ -1,5 +1,5 @@
 import streamlit as st
-from typing import List
+from typing import List, Dict
 
 from app.core.system import AutoMLSystem
 from app.datasets.management import create, save
@@ -7,7 +7,12 @@ from autoop.core.ml.dataset import Dataset
 
 automl = AutoMLSystem.get_instance()
 
-datasets: List[Dataset] = automl.registry.list(type="dataset")
+st.title("Dataset manager")
+
+datasets_list: List[Dataset] = automl.registry.list(type="dataset")
+datasets_dict: Dict = {}
+for dataset in datasets_list:
+    datasets_dict[dataset.name] = dataset.read()
 
 st.write("Upload a CSV file to view the dataset:")
 
@@ -36,5 +41,7 @@ if isinstance(dataset, Dataset):
 
 st.write("Your datasets")
 
-for dataset in datasets:
-    st.dataframe(dataset.read())
+selected_dataset = st.selectbox("Select a dataset:", options=list(datasets_dict.keys()))
+
+st.subheader("Selected dataset")
+st.dataframe(datasets_dict[selected_dataset])

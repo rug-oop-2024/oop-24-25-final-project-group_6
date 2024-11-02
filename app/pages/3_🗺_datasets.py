@@ -41,7 +41,8 @@ if isinstance(dataset, Dataset):
 st.write("Your datasets")
 st.write("Select a dataset from your saved datasets to view it.")
 
-selected_dataset = st.selectbox("Select a dataset:", options=list(dataset_contents.keys()))
+selected_dataset = st.selectbox("Select a dataset:",
+                                options=list(dataset_contents.keys()))
 
 
 if selected_dataset is not None:

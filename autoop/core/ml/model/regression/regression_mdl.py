@@ -3,6 +3,7 @@ from sklearn.linear_model import Ridge as SklearnRidge
 from sklearn.tree import DecisionTreeRegressor as SklearnDecisionTreeRegressor
 
 import numpy as np
+from autoop.core.ml.model.model import Model
 
 
 class LinearRegression(Model):
@@ -95,4 +96,3 @@ class DecisionTreeRegressor(Model):
         """
         prediction = self.model.predict(observations)
         return prediction
-

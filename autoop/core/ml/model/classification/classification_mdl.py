@@ -3,7 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier as SklearnKNN
 from sklearn.tree import DecisionTreeClassifier as SklearnDecisionTree
 import numpy as np
 
-from model import Model
+from autoop.core.ml.model.model import Model
 
 class LogisticRegression(Model):
     """Logistic Regression model for binary classification."""

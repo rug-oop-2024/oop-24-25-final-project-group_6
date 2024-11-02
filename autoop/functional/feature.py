@@ -15,7 +15,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     data_frame: pd.DataFrame = dataset.read()
     feature_types_list: List[Feature] = []
 
-    for col in data_frame.columns:
+    for col in data_frame.head(0).columns:
         if data_frame[col].dtype in ['int64', 'float64']:
             feature_types_list.append(Feature("numerical",
                                               data_frame[col].name))

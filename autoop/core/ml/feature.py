@@ -24,8 +24,8 @@ class Feature():
             self._type = value
 
     def __init__(self, type: str, name: str):
-        self._type = type
+        self.type = type
         self.name = name
 
     def __str__(self):
-        raise NotImplementedError("To be implemented.")
+        return self.name + ": " + self.type

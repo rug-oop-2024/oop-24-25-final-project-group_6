@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from pydantic.fields import PrivateAttr
 
 
-class Model(BaseModel, ABC):
+class Model(ABC):
     """
     Abstract class for training models based on supervised learning
 
@@ -25,12 +25,12 @@ class Model(BaseModel, ABC):
     values that have to be stored within the subclasses itself. It also
     creates a deepcopy to prevent leakage.
     """
-    _params: dict = PrivateAttr(default_factory=dict)
-    _hyperparameters: dict = PrivateAttr(default_factory=dict)
-    _type: str = PrivateAttr(default_factory=str)
+    _params: dict = dict
+    _hyperparameters: dict = dict
+    _type: str = str
 
     def __init__(self, type):
-        self._type = type
+        self.type = type
 
     @property
     def parameters(self) -> dict:

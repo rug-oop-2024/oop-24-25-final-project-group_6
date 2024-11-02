@@ -112,7 +112,7 @@ Pipeline(
         if data_type == "training":
             self._metrics_results_train = metric_result
             self._prediction_train = predictions
-        elif data_type == "training":
+        elif data_type == "evaluation":
             self._metrics_results_test = metric_result
             self._prediction_test = predictions
 

@@ -99,22 +99,34 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self):
-        X = self._compact_vectors(self._test_X)
-        Y = self._test_y
-        self._metrics_results = []
+    def _evaluate(self, x, y, data_type: str) -> None:
+        X = self._compact_vectors(x)
+        Y = y
+        metric_result = []
         predictions = self._model.predict(X)
         for metric in self._metrics:
-            result = metric.evaluate(predictions, Y)
-            self._metrics_results.append((metric, result))
-        self._predictions = predictions
+            metric_name = metric.get_name()
+            result = metric(predictions, Y)
+            metric_result.append((metric_name, result))
+
+        if data_type == "training":
+            self._metrics_results_train = metric_result
+            self._prediction_train = predictions
+        elif data_type == "training":
+            self._metrics_results_test = metric_result
+            self._prediction_test = predictions
 
     def execute(self):
         self._preprocess_features()
         self._split_data()
         self._train()
-        self._evaluate()
+
+        self._evaluate(self._train_X, self._train_y, data_type="training")
+        self._evaluate(self._test_X, self._test_y, data_type="evaluation")
+
         return {
-            "metrics": self._metrics_results,
-            "predictions": self._predictions,
+            "metrics_train": self._metrics_results_train,
+            "prediction_train": self._prediction_train,
+            "metrics_test": self._metrics_results_test,
+            "prediction_test": self._prediction_test,
         }

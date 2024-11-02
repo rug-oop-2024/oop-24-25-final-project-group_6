@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import os
 from typing import List
 from glob import glob
-import regex as re
+import re
 
 class NotFoundError(Exception):
     def __init__(self, path):

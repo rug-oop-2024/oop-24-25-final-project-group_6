@@ -1,9 +1,11 @@
 import streamlit as st
 import pickle as pkl
+import pandas as pd
 from typing import List
 
 from app.core.system import AutoMLSystem
 from app.deployment.load import select_pipeline
+from app.deployment.predict import predict
 from app.modelling.pipeline import display_pipeline_summary
 from autoop.core.ml.dataset import Dataset
 
@@ -22,6 +24,7 @@ write_helper_text("In this section, you can design a machine learning " +
 
 pipeline_artifact = select_pipeline(available_pipelines)
 pipeline_data = pkl.loads(pipeline_artifact.data)
+
 display_pipeline_summary(
     selected_dataset=pipeline_data["dataset"],
     selected_feature=pipeline_data["feature_column"],
@@ -29,3 +32,12 @@ display_pipeline_summary(
     selected_metrics=pipeline_data["selected_metrics"],
     selected_model=pipeline_data["selected_model"]
 )
+
+st.header("Predictions")
+
+st.write("Upload a CSV file for predictions:")
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+dataframe = pd.read_csv(uploaded_file)
+
+if st.button("Predict"):
+    predict(pipeline_data["selected_model"], dataframe)

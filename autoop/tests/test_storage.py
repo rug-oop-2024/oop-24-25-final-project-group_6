@@ -1,4 +1,3 @@
-
 import unittest
 
 from autoop.core.storage import LocalStorage, NotFoundError

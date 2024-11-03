@@ -106,7 +106,7 @@ Pipeline(
         predictions = self._model.predict(X)
         for metric in self._metrics:
             metric_name = metric.get_name()
-            result = metric(predictions, Y)
+            result = metric(Y, predictions)
             metric_result.append((metric_name, result))
 
         if data_type == "training":
@@ -129,4 +129,6 @@ Pipeline(
             "prediction_train": self._prediction_train,
             "metrics_test": self._metrics_results_test,
             "prediction_test": self._prediction_test,
+            "ground_truth_test": self._output_vector,
+            "ground_truth_train": self._train_y
         }

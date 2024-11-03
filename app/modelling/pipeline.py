@@ -96,15 +96,18 @@ def train_pipeline(
         model: Model,
         target_feature: Feature
         ) -> None:
+    try:
+        pipeline = Pipeline(
+            metrics=metrics,
+            dataset=selected_dataset,
+            model=model,
+            input_features=detect_feature_types(selected_dataset),
+            target_feature=target_feature,
+            split=split_ratio
+        )
+    except Exception as e:
+        st.error(e)
 
-    pipeline = Pipeline(
-        metrics=metrics,
-        dataset=selected_dataset,
-        model=model,
-        input_features=detect_feature_types(selected_dataset),
-        target_feature=target_feature,
-        split=split_ratio
-    )
     st.header("🚀 Pipeline results")
 
     results = pipeline.execute()
@@ -112,15 +115,9 @@ def train_pipeline(
     for metric_results in results["metrics_train"]:
         st.markdown(f"**{metric_results[0]}**: {metric_results[1]}")
 
-    st.subheader("🔍 Training Predictions")
-    st.dataframe(results["prediction_train"])
-
     st.subheader("🧪 Test Metrics")
     for metric_results in results["metrics_test"]:
         st.markdown(f"**{metric_results[0]}**: {metric_results[1]}")
-
-    st.subheader("🔮 Test Predictions")
-    st.dataframe(results["prediction_test"])
 
 
 def save_pipeline(
@@ -130,30 +127,36 @@ def save_pipeline(
         metrics: Metric,
         model: Model,
         automl: AutoMLSystem
-        ):
-    st.write("Save Pipeline")
+        ) -> bool:
+    st.subheader("💾 Save Pipeline")
     pipeline_name = st.text_input("Enter the name for your pipeline:")
     version = st.text_input("Enter the version for your pipeline:")
 
-    st.markdown("---")
-
     if st.button("Save Pipeline"):
         if pipeline_name and version:
-            pipeline_artifact: Artifact = Artifact(
-                name=pipeline_name,
-                type="pipeline",
-                version=version,
-                asset_path=pipeline_name + ".pkl",
-                data=pkl.dumps({
-                    "dataset": dataset,
-                    "feature_column": feature_column,
-                    "split_ratio": split_ratio,
-                    "selected_metrics": metrics,
-                    "selected_model": model
-                })
-            )
-            automl.registry.register(pipeline_artifact)
+            try:
+                pipeline_artifact: Artifact = Artifact(
+                    name=pipeline_name,
+                    type="pipeline",
+                    version=version,
+                    asset_path=pipeline_name + ".pkl",
+                    data=pkl.dumps({
+                        "dataset": dataset,
+                        "feature_column": feature_column,
+                        "split_ratio": split_ratio,
+                        "selected_metrics": metrics,
+                        "selected_model": model
+                    })
+                )
+                automl.registry.register(pipeline_artifact)
+            except Exception as e:
+                st.error(e)
+                return False
             st.success(f"Pipeline '{pipeline_name}' version '{version}' " +
                        "successfully saved !")
+            return True
         else:
             st.error("Please enter the name and version.")
+            return False
+
+    st.markdown("---")

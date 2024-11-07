@@ -18,6 +18,6 @@ def select_pipeline(pipelines: List[Artifact]) -> Artifact:
                  for pipeline in pipeline_contents.keys()]
     )
 
-    selected_pipeline_name = selected_pipeline_box.split(" ")[0]
+    selected_pipeline_name = selected_pipeline_box.split(" (")[0]
 
     return pipeline_contents[selected_pipeline_name]

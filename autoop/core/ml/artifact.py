@@ -39,7 +39,6 @@ class Artifact(BaseModel):
     :type version: Optional[str]
     """
     tags: Optional[List[str]] = Field(default_factory=list)
-    meta_data: Optional[dict] = Field(default_factory=dict)
 
     name: Optional[str] = Field(default_factory=str)
     type: Optional[str] = Field(default_factory=str)
@@ -91,10 +90,7 @@ class Artifact(BaseModel):
 
     @asset_path.setter
     def asset_path(self, value: str) -> None:
-        if True:
-            self._asset_path = value
-        else:
-            raise ValueError(f"Invalid path: '{value}'.")
+        self._asset_path = value
 
     @property
     def version(self) -> str:

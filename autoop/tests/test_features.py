@@ -1,17 +1,10 @@
 import unittest
 from sklearn.datasets import load_iris, fetch_openml
 import pandas as pd
-import os
-import sys
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-functional_dir = os.path.dirname(current_dir)
-auto_oop_dir = os.path.dirname(functional_dir)
-sys.path.insert(0, auto_oop_dir)
-
-from autoop.core.ml.dataset import Dataset  # noqa: E402
-from autoop.core.ml.feature import Feature  # noqa: E402
-from autoop.functional.feature import detect_feature_types  # noqa: E402
+from autoop.core.ml.dataset import Dataset
+from autoop.core.ml.feature import Feature
+from autoop.functional.feature import detect_feature_types
 
 
 class TestFeatures(unittest.TestCase):

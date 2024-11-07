@@ -56,20 +56,23 @@ display_pipeline_summary(
     selected_model
 )
 
-save_pipeline(
-    selected_dataset,
-    selected_feature,
-    split_ratio,
-    selected_metrics,
-    selected_model,
-    automl
-)
-
 if st.button("Train pipeline"):
+    st.session_state.train = True
+
+if "train" in st.session_state:
     train_pipeline(
         selected_dataset,
         split_ratio,
         selected_metrics,
         selected_model,
         selected_feature
+    )
+
+    save_pipeline(
+        selected_dataset,
+        selected_feature,
+        split_ratio,
+        selected_metrics,
+        selected_model,
+        automl
     )

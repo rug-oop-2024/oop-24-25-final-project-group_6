@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Any
 import numpy as np
 
 
@@ -42,7 +41,8 @@ class Accuracy(Metric):
         Returns:
             float: The computed accuracy score.
         """
-        correct_val = np.sum(np.array(y_ground) == np.array(y_pred))
+        row_matches = np.all(y_ground == y_pred, axis=1)
+        correct_val = np.sum(row_matches)
         return correct_val / len(y_ground)
 
 
@@ -59,8 +59,11 @@ class Precision(Metric):
         Returns:
             float: The computed precision score.
         """
-        true_pos = np.sum((y_ground == 1) & (y_pred == 1))
-        false_pos = np.sum((y_ground == 0) & (y_pred == 1))
+        y_ground_flat = y_ground.flatten()
+        y_pred_flat = y_pred.flatten()
+
+        true_pos = np.sum((y_pred_flat == 1) & (y_ground_flat == 1))
+        false_pos = np.sum((y_pred_flat == 1) & (y_ground_flat == 0))
         return true_pos / (true_pos + false_pos) if (true_pos + false_pos) != 0 else 0.0
 
 
@@ -77,8 +80,11 @@ class Recall(Metric):
         Returns:
             float: The computed recall score.
         """
-        true_pos = np.sum((y_ground == 1) & (y_pred == 1))
-        false_neg = np.sum((y_ground == 1) & (y_pred == 0))
+        y_ground_flat = y_ground.flatten()
+        y_pred_flat = y_pred.flatten()
+
+        true_pos = np.sum((y_pred_flat == 1) & (y_ground_flat == 1))
+        false_neg = np.sum((y_pred_flat == 0) & (y_ground_flat == 1))
         return true_pos / (true_pos + false_neg) if (true_pos + false_neg) != 0 else 0.0
 
 

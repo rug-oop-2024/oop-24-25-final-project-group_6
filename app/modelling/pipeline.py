@@ -16,6 +16,11 @@ from autoop.core.ml.pipeline import Pipeline
 
 
 def select_dataset_split() -> float:
+    """Prompt the user to select the train-test split ratio using a slider.
+
+    Returns:
+        float: The selected split ratio.
+    """
     st.write("Please select dataset split: ")
     split_ratio: float = st.slider(
         "Select the training/test split ratio: ",
@@ -28,6 +33,13 @@ def select_dataset_split() -> float:
 
 
 def select_metrics() -> List[Metric]:
+    """Prompts the user to select one or more evaluation 
+    metrics from a predefined list.
+
+
+    Returns:
+        List[Metric]: A list of selected Metric objects.
+    """
     st.write("Select Metrics")
     selected_metrics_names: str = st.multiselect("Choose metrics to evaluate "
                                                  + "the model:",
@@ -45,6 +57,17 @@ def display_pipeline_summary(
         selected_metrics: List[Metric],
         selected_model: Model
         ) -> None:
+    """Displays a summary of the pipeline configuration, 
+    including dataset information, feature column details, split ratio, 
+    selected metrics, and model information.
+
+    Args:
+        selected_dataset (Dataset): The chosen dataset for the pipeline.
+        selected_feature (Feature): The target feature for the pipeline.
+        split_ratio (float): The ratio of data used for training.
+        selected_metrics (List[Metric]): The metrics selected for evaluation.
+        selected_model (Model): The machine learning model chosen for the pipeline.
+    """
     st.markdown("---")
     st.header("🛠️ Pipeline Summary")
 
@@ -96,6 +119,16 @@ def train_pipeline(
         model: Model,
         target_feature: Feature
         ) -> None:
+    """Train a machine learning pipeline using the selected dataset, 
+    model, split ratio, metrics, and target feature.
+
+    Args:
+        selected_dataset (Dataset): The dataset for training.
+        split_ratio (float): The proportion of data used for training.
+        metrics (List[Metric]): A list of evaluation metrics.
+        model (Model): The machine learning model to be trained.
+        target_feature (Feature): The target feature for prediction.
+    """
     try:
         pipeline = Pipeline(
             metrics=metrics,
@@ -128,6 +161,19 @@ def save_pipeline(
         model: Model,
         automl: AutoMLSystem
         ) -> bool:
+    """Saves the trained pipeline configuration as an artifact.
+
+    Args:
+        dataset (Dataset): The dataset used in the pipeline.
+        feature_column (Feature): The target feature column.
+        split_ratio (float): The split ratio used for training and testing.
+        metrics (Metric): The evaluation metrics.
+        model (Model): The machine learning model used in the pipeline.
+        automl (AutoMLSystem): The AutoML system instance for registering the artifact.
+
+    Returns:
+        bool: "True" if the pipeline was saved successfully and "False" otherwise.
+    """
     st.subheader("💾 Save Pipeline")
     pipeline_name = st.text_input("Enter the name for your pipeline:")
     version = st.text_input("Enter the version for your pipeline:")

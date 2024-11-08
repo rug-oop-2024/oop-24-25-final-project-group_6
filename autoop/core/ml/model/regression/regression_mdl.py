@@ -9,7 +9,7 @@ from autoop.core.ml.model.model import Model
 class LinearRegression(Model):
     """Linear Regression model for predicting continuous outcomes."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(type="regression")
         self.model = SklearnLinearRegression()
 

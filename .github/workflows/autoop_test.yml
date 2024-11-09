@@ -39,4 +39,4 @@ jobs:
 
       - name: Run tests
         run: |
-          python autoop/tests/main.py
+          python -m unittest discover -s autoop/tests -p "main.py"

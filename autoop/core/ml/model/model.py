@@ -27,9 +27,15 @@ class Model(ABC):
     _type: str = str
 
     def __str__(self):
+        """
+        Human readable representation of the model
+        """
         return "yo"
 
     def __init__(self, type):
+        """
+        Initializer method for the Method class
+        """
         self.type = type
 
     @property
@@ -80,7 +86,7 @@ class Model(ABC):
         if value in allowed_types:
             self._type = value
         else:
-            raise ValueError(f"Invalid model type: '{value}'." +
+            raise ValueError(f"Invalid model type: '{value}'."
                              " Allowed types are: {', '.join(allowed_types)}.")
 
     @abstractmethod
@@ -113,6 +119,14 @@ class Model(ABC):
         pass
 
     def to_artifact(self, name: str) -> Artifact:
+        """
+        Makes the model class into a artifact.
+
+        Args:
+            name (str): The name of the model
+        Returns:
+            Artifact: The data of the model stored in an artifact.
+        """
         return Artifact(
             name=name,
             asset_path=os.path.abspath(__file__),
@@ -120,6 +134,5 @@ class Model(ABC):
             tags=[],
             data=pickle.dumps(self.parameters),
             type=self.type,
-            # model might get a version attribute for saving the same model
             version="1.0.0"
         )

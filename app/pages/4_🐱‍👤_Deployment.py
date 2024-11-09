@@ -14,12 +14,18 @@ automl = AutoMLSystem.get_instance()
 available_pipelines: List[Dataset] = automl.registry.list(type="pipeline")
 
 
-def write_helper_text(text: str):
+def write_helper_text(text: str) -> None:
+    """
+    Writes helper text
+
+    Args:
+        text (str): The text that is written
+    """
     st.write(f"<p style=\"color: #888;\">{text}</p>", unsafe_allow_html=True)
 
 
 st.title("🛠 Pipeline manager")
-write_helper_text("In this section, you can design a machine learning " +
+write_helper_text("In this section, you can design a machine learning "
                   "pipeline to train a model on a dataset.")
 
 pipeline_artifact = select_pipeline(available_pipelines)

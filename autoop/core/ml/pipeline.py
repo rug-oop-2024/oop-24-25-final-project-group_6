@@ -48,16 +48,16 @@ class Pipeline():
         self._artifacts = {}
         self._split = split
         if (
-            target_feature.type == "categorical"
-            and model.type != "classification"
+            target_feature.type == "categorical" and
+            model.type != "classification"
         ):
-            raise ValueError("Model type must be classification for " +
+            raise ValueError("Model type must be classification for "
                              "categorical target feature")
         if (
-            target_feature.type == "continuous"
-            and model.type != "regression"
+            target_feature.type == "continuous" and
+            model.type != "regression"
         ):
-            raise ValueError("Model type must be regression for " +
+            raise ValueError("Model type must be regression for "
                              "continuous target feature")
 
     def __str__(self) -> str:
@@ -153,10 +153,10 @@ Pipeline(
                          for vector in self._input_vectors]
         self._test_X = [vector[int(split * len(vector)):]
                         for vector in self._input_vectors]
-        self._train_y = self._output_vector[:int(split *
-                                                 len(self._output_vector))]
-        self._test_y = self._output_vector[int(split *
-                                               len(self._output_vector)):]
+        train_y = self._output_vector[:int(split * len(self._output_vector))]
+        test_y = self._output_vector[int(split * len(self._output_vector)):]
+        self._train_y = train_y
+        self._test_y = test_y
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """Concatenate a list of numpy arrays column-wise.

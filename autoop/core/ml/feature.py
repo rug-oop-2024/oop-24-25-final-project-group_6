@@ -31,7 +31,7 @@ class Feature(object):
             None
         """
         if value not in ["numerical", "categorical"]:
-            raise ValueError("Type can only be either numerical or " +
+            raise ValueError("Type can only be either numerical or "
                              "categorical")
         else:
             self._type = value

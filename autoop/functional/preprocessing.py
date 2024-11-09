@@ -9,7 +9,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 def preprocess_features(
         features: List[Feature], dataset: Dataset
-        ) -> List[Tuple[str, np.ndarray, dict]]:
+) -> List[Tuple[str, np.ndarray, dict]]:
     """
     Preprocess features.
     Args:

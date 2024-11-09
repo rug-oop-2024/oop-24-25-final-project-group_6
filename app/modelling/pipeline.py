@@ -41,8 +41,8 @@ def select_metrics() -> List[Metric]:
         List[Metric]: A list of selected Metric objects.
     """
     st.write("Select Metrics")
-    selected_metrics_names: str = st.multiselect("Choose metrics to evaluate "
-                                                 + "the model:",
+    selected_metrics_names: str = st.multiselect("Choose metrics to " +
+                                                 "evaluate the model:",
                                                  options=METRICS)
 
     selected_metrics: List[Metric] = [get_metric(metric) for metric in
@@ -56,7 +56,7 @@ def display_pipeline_summary(
         split_ratio: float,
         selected_metrics: List[Metric],
         selected_model: Model
-        ) -> None:
+) -> None:
     """Displays a summary of the pipeline configuration,
     including dataset information, feature column details, split ratio,
     selected metrics, and model information.
@@ -76,7 +76,7 @@ def display_pipeline_summary(
     if selected_dataset:
         st.write(f"**Dataset**: {selected_dataset.name}")
     else:
-        st.error("❌ No dataset selected. Selecting a dataset is required to " +
+        st.error("❌ No dataset selected. Selecting a dataset is required to "
                  "proceed.")
 
     st.subheader("**📂 Feature column**")
@@ -84,7 +84,7 @@ def display_pipeline_summary(
         st.write(f"**Name**: {selected_feature.name}")
         st.write(f"**Type**: {selected_feature.type}")
     else:
-        st.error("❌ No feature column selected. Selecting a training" +
+        st.error("❌ No feature column selected. Selecting a training"
                  " - feature column is required to proceed.")
 
     st.subheader("🧮 Training - Test split")
@@ -94,7 +94,7 @@ def display_pipeline_summary(
                     .format(float(split_ratio)))
         st.markdown("**Test data ratio**: {:.1f}".format(test_split))
     else:
-        st.error("❌ No training - test split selected. Selecting a training" +
+        st.error("❌ No training - test split selected. Selecting a training"
                  " - test split is required to proceed.")
 
     st.subheader("🎯 Metrics")
@@ -108,7 +108,7 @@ def display_pipeline_summary(
         st.markdown(f"**Model Name:** {selected_model.__class__.__name__}")
         st.markdown(f"**Model Type:** {selected_model.type.capitalize()}")
     else:
-        st.error("❌ No model selected. Selecting a model is required " +
+        st.error("❌ No model selected. Selecting a model is required "
                  "to proceed.")
     st.markdown("---")
 
@@ -119,7 +119,7 @@ def train_pipeline(
         metrics: List[Metric],
         model: Model,
         target_feature: Feature
-        ) -> None:
+) -> None:
     """Train a machine learning pipeline using the selected dataset,
     model, split ratio, metrics, and target feature.
 
@@ -161,7 +161,7 @@ def save_pipeline(
         metrics: Metric,
         model: Model,
         automl: AutoMLSystem
-        ) -> bool:
+) -> bool:
     """Saves the trained pipeline configuration as an artifact.
 
     Args:
@@ -201,7 +201,7 @@ def save_pipeline(
             except Exception as e:
                 st.error(e)
                 return False
-            st.success(f"Pipeline '{pipeline_name}' version '{version}' " +
+            st.success(f"Pipeline '{pipeline_name}' version '{version}' "
                        "successfully saved !")
             return True
         else:

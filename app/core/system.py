@@ -15,7 +15,7 @@ class ArtifactRegistry():
             self,
             database: Database,
             storage: Storage
-            ) -> None:
+    ) -> None:
         """
         Initializer method for ArtifactRegistry class.
 

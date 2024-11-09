@@ -6,6 +6,9 @@ from typing import Tuple, List, Union
 
 
 class Database():
+    """
+    Database class for saving data.
+    """
     def __init__(self, storage: Storage) -> None:
         """
         Initalizer method of database class.

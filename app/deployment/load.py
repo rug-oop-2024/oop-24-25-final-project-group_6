@@ -21,8 +21,7 @@ def select_pipeline(pipelines: List[Artifact]) -> Artifact:
 
     selected_pipeline_box = st.selectbox(
         label="Select a pipeline:",
-        options=[pipeline + " (version: " +
-                 pipeline_contents[pipeline].version + ")"
+        options=[f"{pipeline} (version: {pipeline_contents[pipeline].version})"
                  for pipeline in pipeline_contents.keys()]
     )
 

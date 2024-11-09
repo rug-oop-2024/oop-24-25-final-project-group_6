@@ -1,3 +1,7 @@
+"""
+This package provides utilities for the model.py class.
+"""
+
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.model.classification.classification_mdl import RandomForest
 from autoop.core.ml.model.classification.classification_mdl import KNN

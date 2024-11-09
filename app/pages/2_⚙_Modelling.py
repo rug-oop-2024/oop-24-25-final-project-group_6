@@ -60,7 +60,7 @@ if st.button("Train pipeline"):
     st.session_state.train = True
 
 if "train" in st.session_state:
-    train_pipeline(
+    pipeline = train_pipeline(
         selected_dataset,
         split_ratio,
         selected_metrics,
@@ -69,10 +69,6 @@ if "train" in st.session_state:
     )
 
     save_pipeline(
-        selected_dataset,
-        selected_feature,
-        split_ratio,
-        selected_metrics,
-        selected_model,
+        pipeline,
         automl
     )

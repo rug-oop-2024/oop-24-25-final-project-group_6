@@ -32,14 +32,26 @@ class TestMetric(unittest.TestCase):
         """
         metric: Metric = metric()
         if task_type == "categorical":
-            result_perfect = metric(np.array([1, 1, 1, 1, 1]),
-                                    np.array([1, 1, 1, 1, 1]))
+            result_perfect = metric(
+                np.array([[0, 0, 1], [0, 0, 1], [1, 0, 0], [1, 0, 0],
+                          [0, 1, 0]]),
+                np.array([[0, 0, 1], [0, 0, 1], [1, 0, 0], [1, 0, 0],
+                          [0, 1, 0]])
+            )
 
-            result_ok = metric(np.array([1, 0, 1, 1, 0]),
-                               np.array([1, 0, 0, 1, 1]))
+            result_ok = metric(
+                np.array([[0, 0, 1], [0, 0, 1], [1, 0, 0], [1, 0, 0],
+                          [0, 1, 0]]),
+                np.array([[0, 1, 0], [1, 0, 0], [1, 0, 0], [1, 0, 0],
+                          [0, 1, 0]])
+            )
 
-            result_failure = metric(np.array([1, 1, 1, 1, 1]),
-                                    np.array([0, 0, 0, 0, 0]))
+            result_failure = metric(
+                np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 1, 0],
+                         [0, 0, 1]]),
+                np.array([[0, 1, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1],
+                         [0, 1, 0]])
+            )
 
             self.assertEqual(result_perfect, expected_results[0])
             self.assertAlmostEqual(result_ok, expected_results[1], delta=0.1)

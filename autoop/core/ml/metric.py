@@ -18,7 +18,7 @@ class Metric(ABC):
         """
         pass
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get the name of a metric.
 
         Returns:

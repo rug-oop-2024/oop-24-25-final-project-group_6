@@ -26,13 +26,13 @@ class Model(ABC):
     _hyperparameters: dict = dict
     _type: str = str
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Human readable representation of the model
         """
         return "yo"
 
-    def __init__(self, type):
+    def __init__(self, type: str) -> None:
         """
         Initializer method for the Method class
         """

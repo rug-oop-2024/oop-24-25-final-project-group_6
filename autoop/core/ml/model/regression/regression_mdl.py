@@ -52,7 +52,7 @@ class Ridge(Model):
     regularization.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initializer method of the Ridge class.
         """

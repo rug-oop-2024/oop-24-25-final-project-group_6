@@ -21,7 +21,7 @@ class Pipeline():
                  model: Model,
                  input_features: List[Feature],
                  target_feature: Feature,
-                 split=0.8,
+                 split: float = 0.8,
                  ) -> None:
         """
         Initialize the Pipeline with the provided metrics, dataset, model,
@@ -47,12 +47,11 @@ class Pipeline():
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if (target_feature.type == "categorical" and
-                model.type != "classification"):
+        target_type: str = target_feature.type
+        if target_type == "categorical" and model.type != "classification":
             raise ValueError("Model type must be classification for "
                              "categorical target feature")
-        if (target_feature.type == "continuous" and
-                model.type != "regression"):
+        if target_type == "continuous" and model.type != "regression":
             raise ValueError("Model type must be regression for "
                              "continuous target feature")
 
@@ -111,7 +110,7 @@ Pipeline(
         )
         return artifacts
 
-    def _register_artifact(self, name: str, artifact) -> None:
+    def _register_artifact(self, name: str, artifact: Artifact) -> None:
         """Registers an artifact with the provided name.
 
         Args:
@@ -173,7 +172,7 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self, x, y, data_type: str) -> None:
+    def _evaluate(self, x: np.ndarray, y: np.ndarray, data_type: str) -> None:
         """
         Evaluates the model on the given data and records the evaluation
         metrics for both training and testing data.

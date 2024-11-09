@@ -1,11 +1,19 @@
-from typing import List, Dict
-
 from autoop.core.ml.artifact import Artifact
+
+from typing import List, Dict
 
 import streamlit as st
 
 
 def select_pipeline(pipelines: List[Artifact]) -> Artifact:
+    """
+    Function for selecting a saved pipelines from a streamlit selection box.
+
+    Args:
+        pipelines (List[Artifact]): All saved pipelines
+    Returns:
+        Artifact: The selected pipeline.
+    """
     pipeline_contents: Dict = {}
 
     for pipeline in pipelines:

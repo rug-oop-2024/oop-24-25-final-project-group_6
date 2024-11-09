@@ -77,3 +77,28 @@ class Feature(object):
             re-initialized when copied and pasted in a program.
         """
         return f"{self.__class__.__name__}({self.type}, {self.name})"
+
+    def __eq__(self, other: "Feature") -> bool:
+        """
+        Evaluates whether the left hand side and the right hand side of feature
+        instances are equal to each other. This is tested by looking whether
+        the type and name of both instances are equal.
+
+        Returns:
+            bool: Returns whether both Feature instances are equal to eachother
+        """
+        if isinstance(other, Feature):
+            return self.type == other.type and self.name == other.name
+        return False
+
+    def __ne__(self, other: "Feature") -> bool:
+        """
+        Evaluates whether the left hand side and the right hand side of feature
+        instances are un equal to each other. This is tested by looking whether
+        the type and name of both instances are unequal.
+
+        Returns:
+            bool: Returns whether both Feature instances are unequal to each
+            other.
+        """
+        return not self.__eq__(other)

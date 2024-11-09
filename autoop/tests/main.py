@@ -7,4 +7,5 @@ from autoop.tests.test_metric import TestMetric  # noqa: F401
 import unittest
 
 if __name__ == '__main__':
+    # Added comment for testing
     unittest.main()

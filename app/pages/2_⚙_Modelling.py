@@ -72,7 +72,7 @@ def modelling_page(available_datasets: List[Dataset]) -> None:
         st.session_state.train = True
 
     if "train" in st.session_state:
-        pipeline = train_pipeline(
+        pipeline, is_valid_target_column = train_pipeline(
             selected_dataset,
             split_ratio,
             selected_metrics,
@@ -80,16 +80,46 @@ def modelling_page(available_datasets: List[Dataset]) -> None:
             selected_feature
         )
 
-        save_pipeline(
-            pipeline=pipeline,
-            automl=automl,
-            dataset=selected_dataset,
-            metrics=selected_metrics
-        )
+        if is_valid_target_column is None:
+            save_pipeline(
+                pipeline=pipeline,
+                automl=automl,
+                dataset=selected_dataset,
+                metrics=selected_metrics
+            )
+        else:
+            st.markdown(
+                f"""
+                <div style="color: #B22222; border: 2px solid #7C0A02;
+                padding: 15px;
+                background-color: #7C0A02; border-radius: 8px;">
+                    <h2 style="text-align: center; color: #FFFDD3;">🚫 Error:
+                    Target column not valid for prediction</h2>
+                    <p style="text-align: center; font-size: 16px; color:
+                    #FFFDD3;">
+                        {is_valid_target_column}. Therefore
+                        the target column is not valid for prediction.
+                    </p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 
 if available_datasets:
     modelling_page(available_datasets)
 else:
-    st.error("❌ No datasets saved.")
-    st.info("💡 Handle your datasets in the datasets page")
+    st.markdown(
+        """
+        <div style="color: #B22222; border: 2px solid #7C0A02; padding: 15px;
+        background-color: #7C0A02; border-radius: 8px;">
+            <h2 style="text-align: center; color: #FFFDD3;">🚫 Error: No
+            Dataset Saved</h2>
+            <p style="text-align: center; font-size: 16px; color: #FFFDD3;">
+                Required <strong>dataset save</strong> is not available.
+                Please ensure that a dataset has been saved.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )

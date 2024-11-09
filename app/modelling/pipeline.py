@@ -1,5 +1,5 @@
 import streamlit as st
-from typing import List
+from typing import List, Tuple
 import pickle as pkl
 
 from app.core.system import AutoMLSystem
@@ -9,6 +9,7 @@ from autoop.core.ml.metric import Metric
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.artifact import Artifact
 from autoop.functional.feature import detect_feature_types
+from app.modelling.models import is_valid_target_for_prediction
 
 from autoop.core.ml.metric import METRICS, get_metric
 
@@ -119,7 +120,7 @@ def train_pipeline(
         metrics: List[Metric],
         model: Model,
         target_feature: Feature
-) -> None | Pipeline:
+) -> Tuple[Pipeline, bool] | None:
     """Train a machine learning pipeline using the selected dataset,
     model, split ratio, metrics, and target feature.
 
@@ -129,6 +130,11 @@ def train_pipeline(
         metrics (List[Metric]): A list of evaluation metrics.
         model (Model): The machine learning model to be trained.
         target_feature (Feature): The target feature for prediction.
+
+    Returns:
+        Tuple[Pipeline, str]: First variable is the pipeline that is created,
+        the second variable is whether the target column is valid for
+        prediction.
     """
     input_features = [feature for feature in
                       detect_feature_types(selected_dataset)
@@ -153,11 +159,24 @@ def train_pipeline(
     for metric_results in results["metrics_train"]:
         st.markdown(f"**{metric_results[0]}**: {metric_results[1]}")
 
+    valid_train = is_valid_target_for_prediction(
+        results["metrics_train"],
+        target_feature
+    )
+
     st.subheader("🧪 Test Metrics")
     for metric_results in results["metrics_test"]:
         st.markdown(f"**{metric_results[0]}**: {metric_results[1]}")
 
-    return pipeline
+    valid_test = is_valid_target_for_prediction(
+        results["metrics_test"],
+        target_feature
+    )
+
+    is_valid: str = valid_train if valid_train is not None else valid_test
+
+    metric_results = (results["metrics_train"], results["metrics_test"])
+    return pipeline, is_valid
 
 
 def save_pipeline(
@@ -197,7 +216,6 @@ def save_pipeline(
                     metrics_artifact,
                     dataset
                 ])
-                st.write([pipeline.data for pipeline in pipeline_artifacts])
                 pipelines_artifact = Artifact(
                     name=pipeline_name,
                     type="pipeline",

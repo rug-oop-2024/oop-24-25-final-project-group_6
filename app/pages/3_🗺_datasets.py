@@ -25,21 +25,33 @@ if uploaded_file is not None:
     st.success("File uploaded succesfully!")
 
 if isinstance(dataset, Dataset):
-    st.write("Download or Save Dataset")
+    st.subheader("Save or Download dataset")
+    st.markdown('<h5>Download Dataset</h5>', unsafe_allow_html=True)
 
-    st.download_button(
+    download = st.download_button(
         label="Download Dataset as CSV",
         data=dataset.data,
         file_name="uploaded_dataset.csv",
         mime="text/csv"
     )
 
+    if download:
+        st.success("Dataset downloaded successfully!")
+
+    st.markdown('<h5>Save Dataset</h5>', unsafe_allow_html=True)
+
     if st.button("Save Dataset"):
         save(dataset)
-        st.success("Dataset saved successfully!")
+        st.session_state.is_saved = True
         st.rerun()
 
-st.write("Your datasets")
+    if "is_saved" in st.session_state:
+        if st.session_state.is_saved:
+            st.success("Dataset saved successfully!")
+else:
+    st.session_state.is_saved = False
+
+st.subheader("Your datasets")
 st.write("Select a dataset from your saved datasets to view it.")
 
 selected_dataset_name = st.selectbox(

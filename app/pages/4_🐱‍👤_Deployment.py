@@ -80,18 +80,19 @@ def deployment_page(available_pipelines: List[Artifact]) -> None:
 
     st.write("Upload a CSV file for predictions:")
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-    dataframe = pd.read_csv(uploaded_file)
-    prediction_dataset = Dataset.from_dataframe(
-        dataframe,
-        uploaded_file.name,
-        uploaded_file.name
-    )
-
-    if st.button("Predict"):
-        predict(
-            model=model,
-            dataset=prediction_dataset
+    if uploaded_file:
+        dataframe = pd.read_csv(uploaded_file)
+        prediction_dataset = Dataset.from_dataframe(
+            dataframe,
+            uploaded_file.name,
+            uploaded_file.name
         )
+
+        if st.button("Predict"):
+            predict(
+                model=model,
+                dataset=prediction_dataset
+            )
 
 
 if available_pipelines:

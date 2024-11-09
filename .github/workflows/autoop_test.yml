@@ -2,9 +2,16 @@ name: autoop_test
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
+      - master
 
-job:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
   run-tests:
     strategy:
       fail-fast: false

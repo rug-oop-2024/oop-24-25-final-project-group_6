@@ -5,7 +5,13 @@ import pandas as pd
 import os
 
 
-def create(file) -> Dataset:
+def create(file: str) -> Dataset:
+    """
+    Creates a dataset from a UploadedFile class or a file location.
+
+    Args:
+        file: The path the data is stored in, must be in csv format.
+    """
     dataframe = pd.read_csv(file)
 
     datasets_dir = os.path.dirname(os.path.realpath(__file__))
@@ -24,6 +30,12 @@ def create(file) -> Dataset:
 
 
 def save(dataset: Dataset) -> None:
+    """
+    Saves a dataset in the automl registry.
+
+    Args:
+        dataset (Dataset): The dataset that is getting saved.
+    """
     automl = AutoMLSystem.get_instance()
 
     automl.registry.register(dataset)

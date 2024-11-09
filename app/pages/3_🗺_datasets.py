@@ -12,7 +12,7 @@ st.title("Dataset manager")
 available_datasets: List[Dataset] = automl.registry.list(type="dataset")
 dataset_contents: Dict = {}
 for dataset in available_datasets:
-    dataset_contents[dataset.name] = dataset.read()
+    dataset_contents[dataset.name] = dataset
 
 st.write("Upload a CSV file to view the dataset:")
 
@@ -37,16 +37,25 @@ if isinstance(dataset, Dataset):
     if st.button("Save Dataset"):
         save(dataset)
         st.success("Dataset saved successfully!")
+        st.rerun()
 
 st.write("Your datasets")
 st.write("Select a dataset from your saved datasets to view it.")
 
-selected_dataset = st.selectbox("Select a dataset:",
-                                options=list(dataset_contents.keys()))
+selected_dataset_name = st.selectbox(
+    "Select a dataset:",
+    options=list(dataset_contents.keys())
+)
 
+if selected_dataset_name is not None:
+    st.subheader(f"Dataset: {selected_dataset_name}")
 
-if selected_dataset is not None:
-    st.subheader(f"Dataset: {selected_dataset}")
-    st.dataframe(dataset_contents[selected_dataset])
+    selected_dataset = dataset_contents[selected_dataset_name]
+    st.dataframe(selected_dataset.read())
+
+    delete_button = st.button("Delete dataset")
+
+    if delete_button:
+        automl.registry.delete(selected_dataset.id)
 else:
     st.write("No dataset selected or available.")

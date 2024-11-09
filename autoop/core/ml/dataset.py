@@ -22,7 +22,7 @@ class Dataset(Artifact):
 
     @staticmethod
     def from_dataframe(data: pd.DataFrame, name: str, asset_path: str,
-                       version: str = "1.0.0"
+                       version: str = "1_0_0"
                        ) -> "Dataset":
         """
         Static method of Dataset that from a dataframe creates it to a Dataset.

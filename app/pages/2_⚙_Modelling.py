@@ -39,42 +39,57 @@ automl = AutoMLSystem.get_instance()
 
 available_datasets = automl.registry.list(type="dataset")
 
-selected_dataset: Optional[Dataset] = select_dataset(available_datasets)
 
-selected_feature: Optional[Feature] = None
+def modelling_page(available_datasets: List[Dataset]) -> None:
+    """
+    Function to display the modelling page.
 
-if isinstance(selected_dataset, Dataset):
+    Args:
+        available_datasets (List[Dataset]): The datasets that can be used for
+        modelling.
+    """
+    selected_dataset: Optional[Dataset] = select_dataset(available_datasets)
+
+    selected_feature: Optional[Feature] = None
+
     selected_feature = select_features(selected_dataset)
-else:
-    st.write("No dataset selected.")
 
-selected_model: Optional[List[Model]] = select_model(selected_feature)
+    selected_model: Optional[List[Model]] = select_model(selected_feature)
 
-split_ratio: float = select_dataset_split()
+    split_ratio: float = select_dataset_split()
 
-selected_metrics: Optional[List[Metric]] = select_metrics()
+    selected_metrics: Optional[List[Metric]] = select_metrics()
 
-display_pipeline_summary(
-    selected_dataset,
-    selected_feature,
-    split_ratio,
-    selected_metrics,
-    selected_model
-)
-
-if st.button("Train pipeline"):
-    st.session_state.train = True
-
-if "train" in st.session_state:
-    pipeline = train_pipeline(
+    display_pipeline_summary(
         selected_dataset,
+        selected_feature,
         split_ratio,
         selected_metrics,
-        selected_model,
-        selected_feature
+        selected_model
     )
 
-    save_pipeline(
-        pipeline,
-        automl
-    )
+    if st.button("Train pipeline"):
+        st.session_state.train = True
+
+    if "train" in st.session_state:
+        pipeline = train_pipeline(
+            selected_dataset,
+            split_ratio,
+            selected_metrics,
+            selected_model,
+            selected_feature
+        )
+
+        save_pipeline(
+            pipeline=pipeline,
+            automl=automl,
+            dataset=selected_dataset,
+            metrics=selected_metrics
+        )
+
+
+if available_datasets:
+    modelling_page(available_datasets)
+else:
+    st.error("❌ No datasets saved.")
+    st.info("💡 Handle your datasets in the datasets page")

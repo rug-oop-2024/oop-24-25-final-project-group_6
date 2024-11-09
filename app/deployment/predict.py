@@ -1,12 +1,10 @@
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.dataset import Dataset
-from autoop.functional.preprocessing import preprocess_features
-from autoop.functional.feature import detect_feature_types
 
 import streamlit as st
 
 
-def predict(model: Model, dataset: Dataset, transformers: dict) -> None:
+def predict(model: Model, dataset: Dataset) -> None:
     """
     Function for predicting variables. Needs to be implemented.
 

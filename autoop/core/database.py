@@ -59,6 +59,7 @@ class Database():
         Returns:
             None
         """
+        print(self._data.get(collection, id))
         if not self._data.get(collection, None):
             return
         if self._data[collection].get(id, None):

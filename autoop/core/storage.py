@@ -142,11 +142,10 @@ class LocalStorage(Storage):
 
     def _join_path(self, path: str) -> str:
         """
-        Privated method that joins a base_path and a path together.
+        Privated method that joins a base_path and a path together OS agnostic.
         Args:
             path (str): A path to a file.
         Returns:
             str: The joined path
         """
-        # Ensure paths are OS-agnostic
         return os.path.normpath(os.path.join(self._base_path, path))

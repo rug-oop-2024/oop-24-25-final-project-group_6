@@ -14,31 +14,31 @@ from autoop.core.ml.model.regression.regression_mdl import (
 
 
 REGRESSION_MODELS = [
-    "linear regression",
-    "ridge",
-    "decision tree regressor"
+    "LinearRegression",
+    "Ridge",
+    "DecisionTreeRegressor"
 ]
 
 CLASSIFICATION_MODELS = [
-    "random forest",
+    "RandomForest",
     "KNN",
-    "decision tree"
+    "DecisionTree"
 ]
 
 
 def get_model(model_name: str) -> Model:
     """Factory function to get a model by name."""
-    if model_name == "linear regression":
+    if model_name == "LinearRegression":
         return LinearRegression()
-    elif model_name == "ridge":
+    elif model_name == "Ridge":
         return Ridge()
-    elif model_name == "decision tree regressor":
+    elif model_name == "DecisionTreeRegressor":
         return DecisionTreeRegressor()
-    elif model_name == "random forest":
+    elif model_name == "RandomForest":
         return RandomForest()
     elif model_name == "KNN":
         return KNN()
-    elif model_name == "decision tree":
+    elif model_name == "DecisionTree":
         return DecisionTree()
     else:
         return f"Model {model_name} is not implemented."

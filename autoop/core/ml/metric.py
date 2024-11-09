@@ -141,6 +141,8 @@ class RSquared(Metric):
         """
         total_var = np.var(y_ground)
         unexplained_var = np.var(y_ground - y_pred)
+        if total_var == 0:
+            return 1  # Or some other handling if the total variance is zero
         return 1 - (unexplained_var / total_var)
 
 

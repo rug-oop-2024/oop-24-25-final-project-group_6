@@ -38,6 +38,14 @@ class Model(ABC):
         """
         self.type = type
 
+    def get_name(self) -> str:
+        """
+        Gets the name of the class
+        Returns:
+            str: The class name
+        """
+        return self.__class__.__name__
+
     @property
     def parameters(self) -> dict:
         """
@@ -130,9 +138,9 @@ class Model(ABC):
         return Artifact(
             name=name,
             asset_path=os.path.abspath(__file__),
-            meta_data={},
-            tags=[],
+            metadata={"model_name": self.__class__.__name__},
+            tags=["model"],
             data=pickle.dumps(self.parameters),
             type=self.type,
-            version="1.0.0"
+            version="1_0_0"
         )

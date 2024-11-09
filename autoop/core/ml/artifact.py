@@ -52,7 +52,7 @@ class Artifact(BaseModel):
     _asset_path: Optional[str] = PrivateAttr(default_factory=str)
     _metadata: Optional[str] = PrivateAttr(default_factory=dict)
     _data: Optional[bytes] = PrivateAttr(default_factory=bytes)
-    _version: Optional[str] = PrivateAttr(default="1.0.0")
+    _version: Optional[str] = PrivateAttr(default="1_0_0")
 
     def __init__(self, name: str, data: str, **kwargs: Dict[str, Any]) -> None:
         """
@@ -62,12 +62,13 @@ class Artifact(BaseModel):
 
         self.data = data
         self.name = name
-        self.version = kwargs.pop("version", "1.0.0")
+        self.version = kwargs.pop("version", "1_0_0")
         self.asset_path = kwargs.pop("asset_path", str)
         self.metadata = kwargs.pop("metadata", dict)
 
-        self.id = f"{base64.b64encode(self.asset_path.encode()).decode()}" + \
-                  ":{self.version}"
+        path = f"{self.asset_path}:{self.version}"
+        path = path.rstrip("=")
+        self.id = base64.b64encode(path.encode()).decode()
 
     @property
     def metadata(self) -> dict:
@@ -149,7 +150,7 @@ class Artifact(BaseModel):
             value (str): Value that will be checked whether it is a version.
         """
         try:
-            version_indices: List[str] = value.split(".")
+            version_indices: List[str] = value.split("_")
             if len(version_indices) != 3:
                 return False
             return all(part.isdigit() for part in version_indices)
@@ -169,7 +170,20 @@ class Artifact(BaseModel):
             self._version = value
         else:
             raise ValueError(f"Invalid version format: '{value}'. "
-                             "Please use the 'x.y.z' format, e.g., '1.0.0'.")
+                             "Please use the 'x_y_z' format, e.g., '1_0_0'.")
+
+    def __str__(self) -> str:
+        """
+        String representation of the Artifact object.
+        """
+        return (f"Artifact(name={self.name}, "
+                f"type={self.type}, "
+                f"version={self.version}, "
+                f"id={self.id}, "
+                f"tags={self.tags}, "
+                f"asset_path={self.asset_path}), "
+                f"metadata={self.metadata}, "
+                f"tags={self.tags}")
 
     def read(self) -> bytes:
         """

@@ -40,4 +40,9 @@ uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 dataframe = pd.read_csv(uploaded_file)
 
 if st.button("Predict"):
-    predict(pipeline_data["selected_model"], dataframe)
+    model = pipeline_data["selected_model"]
+    predict(model, Dataset.from_dataframe(
+        dataframe,
+        asset_path=uploaded_file.name,
+        name=uploaded_file.name)
+    )

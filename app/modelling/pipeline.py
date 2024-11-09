@@ -119,7 +119,7 @@ def train_pipeline(
         metrics: List[Metric],
         model: Model,
         target_feature: Feature
-) -> None:
+) -> None | Pipeline:
     """Train a machine learning pipeline using the selected dataset,
     model, split ratio, metrics, and target feature.
 
@@ -130,17 +130,21 @@ def train_pipeline(
         model (Model): The machine learning model to be trained.
         target_feature (Feature): The target feature for prediction.
     """
+    input_features = [feature for feature in
+                      detect_feature_types(selected_dataset)
+                      if feature != target_feature]
     try:
         pipeline = Pipeline(
             metrics=metrics,
             dataset=selected_dataset,
             model=model,
-            input_features=detect_feature_types(selected_dataset),
+            input_features=input_features,
             target_feature=target_feature,
             split=split_ratio
         )
     except Exception as e:
         st.error(e)
+        return None
 
     st.header("🚀 Pipeline results")
 
@@ -153,14 +157,14 @@ def train_pipeline(
     for metric_results in results["metrics_test"]:
         st.markdown(f"**{metric_results[0]}**: {metric_results[1]}")
 
+    return pipeline
+
 
 def save_pipeline(
+        pipeline: Pipeline,
         dataset: Dataset,
-        feature_column: Feature,
-        split_ratio: float,
-        metrics: Metric,
-        model: Model,
-        automl: AutoMLSystem
+        metrics: List[Metric],
+        automl: AutoMLSystem,
 ) -> bool:
     """Saves the trained pipeline configuration as an artifact.
 
@@ -184,20 +188,24 @@ def save_pipeline(
     if st.button("Save Pipeline"):
         if pipeline_name and version:
             try:
-                pipeline_artifact: Artifact = Artifact(
+                metrics_artifact = Artifact(
+                    name="metrics_list",
+                    data=pkl.dumps(metrics)
+                )
+                pipeline_artifacts = pipeline.artifacts
+                pipeline_artifacts.extend([
+                    metrics_artifact,
+                    dataset
+                ])
+                st.write([pipeline.data for pipeline in pipeline_artifacts])
+                pipelines_artifact = Artifact(
                     name=pipeline_name,
                     type="pipeline",
                     version=version,
                     asset_path=pipeline_name + ".pkl",
-                    data=pkl.dumps({
-                        "dataset": dataset,
-                        "feature_column": feature_column,
-                        "split_ratio": split_ratio,
-                        "selected_metrics": metrics,
-                        "selected_model": model
-                    })
+                    data=pkl.dumps({"artifacts": pipeline_artifacts})
                 )
-                automl.registry.register(pipeline_artifact)
+                automl.registry.register(pipelines_artifact)
             except Exception as e:
                 st.error(e)
                 return False

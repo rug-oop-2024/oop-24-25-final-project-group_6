@@ -41,7 +41,7 @@ def select_metrics() -> List[Metric]:
         List[Metric]: A list of selected Metric objects.
     """
     st.write("Select Metrics")
-    selected_metrics_names: str = st.multiselect("Choose metrics to " +
+    selected_metrics_names: str = st.multiselect("Choose metrics to "
                                                  "evaluate the model:",
                                                  options=METRICS)
 

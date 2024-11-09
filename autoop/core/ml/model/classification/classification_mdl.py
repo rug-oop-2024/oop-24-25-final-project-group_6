@@ -10,6 +10,9 @@ class RandomForest(Model):
     """Random Forest model for classification."""
 
     def __init__(self) -> None:
+        """
+        Initializer method of the RandomForest class
+        """
         super().__init__(type="classification")
         self.model = RandomForestClassifier()
 
@@ -30,6 +33,9 @@ class KNN(Model):
     """K-Nearest Neighbors (KNN) model for classification."""
 
     def __init__(self) -> None:
+        """
+        Initializer method of the KNN class
+        """
         super().__init__(type="classification")
         self.model = SklearnKNN()
 
@@ -60,6 +66,9 @@ class DecisionTree(Model):
     """Decision Tree model for classification."""
 
     def __init__(self) -> None:
+        """
+        Initializer method of the DecisionTree class
+        """
         super().__init__(type="classification")
         self.model = SklearnDecisionTree()
 

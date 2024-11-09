@@ -2,7 +2,6 @@ from autoop.core.ml.dataset import Dataset
 from app.core.system import AutoMLSystem
 
 import pandas as pd
-import os
 
 
 def create(file: str) -> Dataset:
@@ -14,16 +13,11 @@ def create(file: str) -> Dataset:
     """
     dataframe = pd.read_csv(file)
 
-    datasets_dir = os.path.dirname(os.path.realpath(__file__))
-    app_dir = os.path.dirname(datasets_dir)
-    project_dir = os.path.dirname(app_dir)
-    path_to_saved_file = project_dir + "\\assets\\objects\\" + file.name
-
     dataset: Dataset = Dataset.from_dataframe(
         name=file.name,
-        asset_path=path_to_saved_file,
+        asset_path=file.name,
         data=dataframe,
-        version="1.0.0"
+        version="1_0_0"
     )
 
     return dataset

@@ -38,7 +38,8 @@ class KNN(Model):
 
         Args:
             observations (np.ndarray): The input data for training the model.
-            ground_truth (np.ndarray): The true labels corresponding to the input data.
+            ground_truth (np.ndarray): The true labels corresponding to the
+            input data.
         """
         self.model.fit(observations, ground_truth)
 
@@ -67,7 +68,8 @@ class DecisionTree(Model):
 
         Args:
             observations (np.ndarray): The input data for training the model.
-            ground_truth (np.ndarray): The true labels corresponding to the input data.
+            ground_truth (np.ndarray): The true labels corresponding to the
+            input data.
         """
         self.model.fit(observations, ground_truth)
         self._params = {

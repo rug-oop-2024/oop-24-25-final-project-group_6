@@ -2,13 +2,10 @@ from autoop.core.ml.artifact import Artifact
 
 from abc import abstractmethod, ABC
 from copy import deepcopy
-from typing import List
+import numpy as np
 import os
 import pickle
-
-import numpy as np
-from pydantic import BaseModel
-from pydantic.fields import PrivateAttr
+from typing import List
 
 
 class Model(ABC):
@@ -28,6 +25,9 @@ class Model(ABC):
     _params: dict = dict
     _hyperparameters: dict = dict
     _type: str = str
+
+    def __str__(self):
+        return "yo"
 
     def __init__(self, type):
         self.type = type

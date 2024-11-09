@@ -64,7 +64,8 @@ class Precision(Metric):
 
         true_pos = np.sum((y_pred_flat == 1) & (y_ground_flat == 1))
         false_pos = np.sum((y_pred_flat == 1) & (y_ground_flat == 0))
-        return true_pos / (true_pos + false_pos) if (true_pos + false_pos) != 0 else 0.0
+        return true_pos / (true_pos + false_pos) if (true_pos + false_pos) != \
+            0 else 0.0
 
 
 class Recall(Metric):
@@ -85,7 +86,8 @@ class Recall(Metric):
 
         true_pos = np.sum((y_pred_flat == 1) & (y_ground_flat == 1))
         false_neg = np.sum((y_pred_flat == 0) & (y_ground_flat == 1))
-        return true_pos / (true_pos + false_neg) if (true_pos + false_neg) != 0 else 0.0
+        return true_pos / (true_pos + false_neg) if (true_pos + false_neg) != \
+            0 else 0.0
 
 
 # regression metric
@@ -124,7 +126,8 @@ class MeanAbsoluteError(Metric):
 
 
 class RSquared(Metric):
-    """Class for computing the R-squared (coefficient of determination) metric."""
+    """Class for computing the R-squared (coefficient of determination)
+    metric."""
 
     def __call__(self, y_ground: np.ndarray, y_pred: np.ndarray) -> float:
         """Compute the R-squared score.
@@ -151,14 +154,15 @@ METRICS = [
 ]
 
 
-def get_metric(name: str) -> "Metric":
+def get_metric(name: str) -> Metric:
     """Get a metric instance by name.
 
     Args:
         name (str): The name of the metric to retrieve.
 
     Raises:
-        ValueError: Error occurs if the provided name does not exist in Metrics.
+        ValueError: Error occurs if the provided name does not exist in
+        Metrics.
 
     Returns:
         Metric: An instance of the requested metric.
@@ -175,14 +179,3 @@ def get_metric(name: str) -> "Metric":
         return MeanAbsoluteError()
     else:
         return RSquared()
-
-
-if __name__ == "__main__":
-    y_true = np.array([1, 0, 1, 1, 0])
-    y_pred = np.array([1, 0, 0, 1, 0])
-    metric = get_metric("accuracy")
-    accuracy = metric(y_true, y_pred)
-    assert accuracy == 0.8
-    print("passed")
-    name = metric.get_name()
-    print(name)

@@ -1,15 +1,21 @@
+from autoop.core.ml.model.model import Model
+
+import numpy as np
+
 from sklearn.linear_model import LinearRegression as SklearnLinearRegression
 from sklearn.linear_model import Ridge as SklearnRidge
 from sklearn.tree import DecisionTreeRegressor as SklearnDecisionTreeRegressor
 
-import numpy as np
-from autoop.core.ml.model.model import Model
-
 
 class LinearRegression(Model):
-    """Linear Regression model for predicting continuous outcomes."""
+    """
+    Linear Regression model for predicting continuous outcomes.
+    """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initializer method of the LinearRegression class.
+        """
         super().__init__(type="regression")
         self.model = SklearnLinearRegression()
 
@@ -18,10 +24,14 @@ class LinearRegression(Model):
 
         Args:
             observations (np.ndarray): The input data for training the model.
-            ground_truth (np.ndarray): The true continuous values corresponding to the input data.
+            ground_truth (np.ndarray): The true continuous values
+            corresponding to the input data.
         """
         self.model.fit(observations, ground_truth)
-        self._params = {"coef_": self.model.coef_, "intercept_": self.model.intercept_}
+        self._params = {
+            "coef_": self.model.coef_,
+            "intercept_": self.model.intercept_
+        }
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts continuous outcomes for the given observations.
@@ -37,9 +47,15 @@ class LinearRegression(Model):
 
 
 class Ridge(Model):
-    """Ridge Regression model for predicting continuous outcomes with L2 regularization."""
+    """
+    Ridge Regression model for predicting continuous outcomes with L2
+    regularization.
+    """
 
     def __init__(self):
+        """
+        Initializer method of the Ridge class.
+        """
         super().__init__(type="regression")
         self.model = SklearnRidge()
 
@@ -48,10 +64,14 @@ class Ridge(Model):
 
         Args:
             observations (np.ndarray): The input data for training the model.
-            ground_truth (np.ndarray): The true continuous values corresponding to the input data.
+            ground_truth (np.ndarray): The true continuous values
+            corresponding to the input data.
         """
         self.model.fit(observations, ground_truth)
-        self._params = {"coef_": self.model.coef_, "intercept_": self.model.intercept_}
+        self._params = {
+            "coef_": self.model.coef_,
+            "intercept_": self.model.intercept_
+        }
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts continuous outcomes for the given observations.
@@ -69,6 +89,9 @@ class DecisionTreeRegressor(Model):
     """Decision Tree Regressor model for predicting continuous outcomes."""
 
     def __init__(self) -> None:
+        """
+        Initializer method of the DecisionTreeRegressor class.
+        """
         super().__init__(type="regression")
         self.model = SklearnDecisionTreeRegressor()
 
@@ -77,7 +100,8 @@ class DecisionTreeRegressor(Model):
 
         Args:
             observations (np.ndarray): The input data for training the model.
-            ground_truth (np.ndarray): The true continuous values corresponding to the input data.
+            ground_truth (np.ndarray): The true continuous values
+            to the input data.
         """
         self.model.fit(observations, ground_truth)
         self._params = {

@@ -1,12 +1,114 @@
+class Feature(object):
+    """
+    Feature class that handles the name and the type of a feature column.
+    """
+    """"""
+    @property
+    def name(self) -> str:
+        """
+        Getter for the private name attribute
 
-from pydantic import BaseModel, Field
-from typing import Literal
-import numpy as np
+        Returns:
+            str: The value of the private attributre name.
+        """
+        return self._name
 
-from autoop.core.ml.dataset import Dataset
+    @property
+    def type(self) -> str:
+        """
+        Getter for the private type attribute
 
-class Feature(BaseModel):
-    # attributes here
+        Returns:
+            str: The value of the private attribute type. Returns either
+            categorical or numerical depending on which type of feature column
+            the Feature class refers to.
+        """
+        return self._type
 
-    def __str__(self):
-        raise NotImplementedError("To be implemented.")
+    @type.setter
+    def type(self, value: str) -> None:
+        """
+        Setter for the private type attribute. The value that will be assigned
+        to the private type attribute can be either numerical or categorical.
+        The type attribute refers to the type of feature column the Feature
+        class is refering to.
+
+        Args:
+            value (str): The value that will be assigned to the private type
+            attribute, if the value is valid for the private type value.
+
+        Returns:
+            None
+        """
+        if value not in ["numerical", "categorical"]:
+            raise ValueError("Type can only be either numerical or "
+                             "categorical")
+        else:
+            self._type = value
+
+    def __init__(self, type: str, name: str) -> None:
+        """
+        Initializer for the Feature class
+
+        Args:
+            type (str): The type of the feature column the Feature class is
+            refering to. Can be either numerical or categorical. Numerical
+            values are continuous values and categorical values can take on a
+            limited amount of values.
+            name (str): The name of the feature column the Feature class is
+            refering to.
+
+        Returns:
+            None
+        """
+        self.type = type
+        self._name = name
+
+    def __str__(self) -> str:
+        """
+        Dunder or magic method that gets called when an instance of the
+        Feature class gets formatted in a string. It returns a human readable
+        information of the class.
+
+        Returns:
+            str: A human readable representation of the class.
+        """
+        return f"Feature column: ({self.name}, {self.type})"
+
+    def __repr__(self) -> str:
+        """
+        Dunder or magic method that gets called when repr method is called
+        on the Feature object, is called in interactive mode or when items
+        in an iterable are displayed. It returns a representation of the class
+        in which the class can be reinitialized.
+
+        Returns:
+            str: A representation of the Feature class, so it can be
+            re-initialized when copied and pasted in a program.
+        """
+        return f"{self.__class__.__name__}({self.type}, {self.name})"
+
+    def __eq__(self, other: "Feature") -> bool:
+        """
+        Evaluates whether the left hand side and the right hand side of feature
+        instances are equal to each other. This is tested by looking whether
+        the type and name of both instances are equal.
+
+        Returns:
+            bool: Returns whether both Feature instances are equal to eachother
+        """
+        if isinstance(other, Feature):
+            return self.type == other.type and self.name == other.name
+        return False
+
+    def __ne__(self, other: "Feature") -> bool:
+        """
+        Evaluates whether the left hand side and the right hand side of feature
+        instances are un equal to each other. This is tested by looking whether
+        the type and name of both instances are unequal.
+
+        Returns:
+            bool: Returns whether both Feature instances are unequal to each
+            other.
+        """
+        return not self.__eq__(other)

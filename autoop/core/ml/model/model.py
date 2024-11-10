@@ -142,5 +142,5 @@ class Model(ABC):
             tags=["model"],
             data=pickle.dumps(self.parameters),
             type=self.type,
-            version="1_0_0"
+            version="1.0.0"
         )

@@ -58,7 +58,7 @@ def modelling_page(available_datasets: List[Dataset]) -> None:
 
     split_ratio: float = select_dataset_split()
 
-    selected_metrics: Optional[List[Metric]] = select_metrics()
+    selected_metrics: Optional[List[Metric]] = select_metrics(selected_feature)
 
     display_pipeline_summary(
         selected_dataset,

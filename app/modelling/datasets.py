@@ -20,7 +20,6 @@ def select_dataset(datasets: List[Dataset]) -> Dataset:
         Dataset: The selected dataset from the streamlit selectbox.
     """
     dataset_contents: Dict = {}
-
     for dataset in datasets:
         dataset_contents[dataset.name] = dataset
 

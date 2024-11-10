@@ -146,13 +146,16 @@ class RSquared(Metric):
         return 1 - (unexplained_var / total_var)
 
 
-METRICS = [
-    "accuracy",
-    "precision",
-    "recall",
+REGRESSION_METRICS = [
     "mean_squared_error",
     "mean_absolute_error",
-    "r_squared",
+    "r_squared"
+]
+
+CLASSIFICATION_METRICS = [
+    "accuracy",
+    "precision",
+    "recall"
 ]
 
 

@@ -1,15 +1,14 @@
-from typing import List, Optional
-from pydantic import BaseModel, Field
-from pydantic import PrivateAttr
+from typing import List
 from copy import deepcopy
 import base64
-from typing import Any, Dict
 
 
-class Artifact(BaseModel):
+class Artifact():
     """
     An artifact is an abstract object refering to an asset and includes
     information about this specific assert (such as models, data, etc.)
+
+    The artifact class is immutable
 
     :param tags: Tags provide additional information about what the model
     provides. May be used for filtering content in the app later. If we find
@@ -43,32 +42,161 @@ class Artifact(BaseModel):
     :param version: The version of the asset the artifat is refering to.
     :type version: Optional[str]
     """
-    tags: Optional[List[str]] = Field(default_factory=list)
+    _tags: List[str]
 
-    name: Optional[str] = Field(default_factory=str)
-    type: Optional[str] = Field(default_factory=str)
-    id: Optional[str] = Field(default_factory=str)
+    _name: str
+    _type: str
+    _id: str
 
-    _asset_path: Optional[str] = PrivateAttr(default_factory=str)
-    _metadata: Optional[str] = PrivateAttr(default_factory=dict)
-    _data: Optional[bytes] = PrivateAttr(default_factory=bytes)
-    _version: Optional[str] = PrivateAttr(default="1_0_0")
+    _asset_path: str
+    _metadata: dict
+    _data: bytes
+    _version: str
 
-    def __init__(self, name: str, data: str, **kwargs: Dict[str, Any]) -> None:
+    def __init__(
+            self,
+            name: str,
+            data: bytes,
+            type: str = "",
+            asset_path: str = "placeholder",
+            metadata: dict = {},
+            version: str = "1.0.0",
+            tags: list = []
+    ) -> None:
         """
         Initializer method of artifact class
         """
-        super().__init__(**kwargs)
+        self._name = None
+        self._tags = None
+        self._type = None
+        self._id = None
+        self._asset_path = None
+        self._metadata = None
+        self._data = None
+        self._version = None
 
-        self.data = data
         self.name = name
-        self.version = kwargs.pop("version", "1_0_0")
-        self.asset_path = kwargs.pop("asset_path", str)
-        self.metadata = kwargs.pop("metadata", dict)
+        self.data = data
+        self.type = type
+        self.asset_path = asset_path
+        self.metadata = metadata
+        self.version = version
+        self.tags = tags
 
-        path = f"{self.asset_path}:{self.version}"
-        path = path.rstrip("=")
-        self.id = base64.b64encode(path.encode()).decode()
+        encoded_path = base64.b64encode(self.asset_path.encode()).decode()
+        path = f"{encoded_path}_{self.version}"
+        self.id = path.strip("=")
+
+    @property
+    def id(self) -> str:
+        """
+        Getter function for the private attribute id. Is for making the id
+        attribute read-only as a artifact is immutable.
+
+        Returns:
+            str: Private attribute attribute
+        """
+        return self._id
+
+    @id.setter
+    def id(self, value: str) -> None:
+        """
+        Setter function for the private attribute id.
+
+        Args:
+            value (str): The value that has to be considered to be applied to
+            id
+        """
+        if self._id is not None:
+            raise AttributeError("Artifact class is immutable. ID can only"
+                                 "be set once.")
+        if not isinstance(value, str):
+            raise TypeError("ID must be a string.")
+
+        self._id = value
+
+    @property
+    def tags(self) -> List[str]:
+        """
+        Getter function for the private attribute tags. Is for making the tags
+        attribute read-only as a artifact is immutable.
+
+        Returns:
+            str: Private attribute attribute
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, value: List[str]) -> List[str]:
+        """
+        Setter function for the private attribute tags.
+
+        Args:
+            value List[str]: The value that gets applied to the private tags
+            attribute.
+        """
+        if self._tags is not None:
+            raise AttributeError("Artifact class is immutable. Tags can only"
+                                 "be set once.")
+        if not isinstance(value, list):
+            raise TypeError("Tags must be a list.")
+
+        self._tags = value
+
+    @property
+    def name(self) -> str:
+        """
+        Getter function for the private attribute name. Is for making the name
+        attribute read-only as a artifact is immutable.
+
+        Returns:
+            str: Private name attribute
+        """
+        return self._name
+
+    @name.setter
+    def name(self, value: str) -> None:
+        """
+        Setter function for the private attribute name.
+
+        Args:
+            value (str): The value that has to be considered to be applied to
+            name
+        """
+        if self._name is not None:
+            raise AttributeError("Artifact class is immutable. Name can only"
+                                 "be set once.")
+        if not isinstance(value, str):
+            raise TypeError("Name must be a string.")
+
+        self._name = value
+
+    @property
+    def type(self) -> str:
+        """
+        Getter function for the private attribute type.
+
+        Returns:
+            str: Private type attribute.
+        """
+        return self._type
+
+    @type.setter
+    def type(self, value: str) -> None:
+        """
+        Setter function for the private attribute type.
+
+        Args:
+            value (str): The value that has to be considered to be applied to
+            type
+        """
+        if self._type is not None:
+            raise AttributeError("Artifact class is immutable. Type can only"
+                                 "be set once.")
+        if not isinstance(value, str):
+            raise TypeError("Type must be a string.")
+
+        self._type = value
 
     @property
     def metadata(self) -> dict:
@@ -89,8 +217,12 @@ class Artifact(BaseModel):
         Args:
             value (dict): The value that has to be set for metadata.
         """
-        if isinstance(value, dict):
-            self._metadata = value
+        if self._metadata is not None:
+            raise AttributeError("Artifact class is immutable. metadata can"
+                                 "only be set once.")
+        if not isinstance(value, dict):
+            raise TypeError("metadata must be a dict.")
+        self._metadata = value
 
     @property
     def data(self) -> bytes:
@@ -111,6 +243,9 @@ class Artifact(BaseModel):
         Args:
             value (bytes): The value data has to set to in bytes.
         """
+        if self._data is not None:
+            raise AttributeError("Artifact class is immutable. data can "
+                                 "only be set once.")
         if isinstance(value, bytes):
             self._data = value
         else:
@@ -132,6 +267,11 @@ class Artifact(BaseModel):
         Args:
             value (str): The value that asset_path gets set to.
         """
+        if self._asset_path is not None:
+            raise AttributeError("Artifact class is immutable. asset_path can"
+                                 "only be set once.")
+        if not isinstance(value, str):
+            raise TypeError("asset_path must be a string.")
         self._asset_path = value
 
     @property
@@ -150,7 +290,7 @@ class Artifact(BaseModel):
             value (str): Value that will be checked whether it is a version.
         """
         try:
-            version_indices: List[str] = value.split("_")
+            version_indices: List[str] = value.split(".")
             if len(version_indices) != 3:
                 return False
             return all(part.isdigit() for part in version_indices)
@@ -166,27 +306,44 @@ class Artifact(BaseModel):
         Args:
             value (str): The value that version has to be set to.
         """
-        if self._is_version(value):
-            self._version = value
-        else:
+        if self._version is not None:
+            raise AttributeError("Artifact class is immutable. version can"
+                                 "only be set once.")
+        if not self._is_version(value):
             raise ValueError(f"Invalid version format: '{value}'. "
-                             "Please use the 'x_y_z' format, e.g., '1_0_0'.")
+                             "Please use the 'x.y.z' format, e.g., '1.0.0'.")
+        self._version = value
 
     def __str__(self) -> str:
         """
-        String representation of the Artifact object.
+        Returns:
+            str: Human readable representation of artifact
         """
-        return (f"Artifact(name={self.name}, "
-                f"type={self.type}, "
-                f"version={self.version}, "
-                f"id={self.id}, "
-                f"tags={self.tags}, "
-                f"asset_path={self.asset_path}), "
-                f"metadata={self.metadata}, "
-                f"tags={self.tags}")
+        return (f"Artifact(name={self._name}, "
+                f"type={self._type}, "
+                f"version={self._version}, "
+                f"id={self._id}, "
+                f"asset_path={self._asset_path}, "
+                f"metadata={self._metadata}, "
+                f"tags={self._tags})")
+
+    def __repr__(self) -> str:
+        """
+        Returns:
+            str: Reusable string representation of the Artifact object.
+        """
+        return (f"Artifact(name={self._name}, "
+                f"type={self._type}, "
+                f"version={self._version}, "
+                f"id={self._id}, "
+                f"asset_path={self._asset_path}, "
+                f"metadata={self._metadata}, "
+                f"tags={self._tags}, "
+                f"data={self._data})")
 
     def read(self) -> bytes:
         """
-        Returns the data in bytes.
+        Returns:
+            bytes: the data in bytes.
         """
         return self._data

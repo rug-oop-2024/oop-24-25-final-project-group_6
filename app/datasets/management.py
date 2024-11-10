@@ -17,7 +17,7 @@ def create(file: str) -> Dataset:
         name=file.name,
         asset_path=file.name,
         data=dataframe,
-        version="1_0_0"
+        version="1.0.0"
     )
 
     return dataset

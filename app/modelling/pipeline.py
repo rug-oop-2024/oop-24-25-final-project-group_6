@@ -11,7 +11,11 @@ from autoop.core.ml.artifact import Artifact
 from autoop.functional.feature import detect_feature_types
 from app.modelling.models import is_valid_target_for_prediction
 
-from autoop.core.ml.metric import METRICS, get_metric
+from autoop.core.ml.metric import (
+    CLASSIFICATION_METRICS,
+    REGRESSION_METRICS,
+    get_metric
+)
 
 from autoop.core.ml.pipeline import Pipeline
 
@@ -33,7 +37,7 @@ def select_dataset_split() -> float:
     return float(split_ratio)
 
 
-def select_metrics() -> List[Metric]:
+def select_metrics(feature: Feature) -> List[Metric]:
     """Prompts the user to select one or more evaluation
     metrics from a predefined list.
 
@@ -42,12 +46,19 @@ def select_metrics() -> List[Metric]:
         List[Metric]: A list of selected Metric objects.
     """
     st.write("Select Metrics")
-    selected_metrics_names: str = st.multiselect("Choose metrics to "
-                                                 "evaluate the model:",
-                                                 options=METRICS)
-
+    if feature.type == "categorical":
+        selected_metric_names: List[str] = st.multiselect(
+            "Choose metrics to evaluate the model:",
+            options=CLASSIFICATION_METRICS
+        )
+    else:
+        selected_metric_names: List[str] = st.multiselect(
+            "Choose metrics to evaluate the model:",
+            options=REGRESSION_METRICS
+        )
     selected_metrics: List[Metric] = [get_metric(metric) for metric in
-                                      selected_metrics_names]
+                                      selected_metric_names]
+
     return selected_metrics
 
 

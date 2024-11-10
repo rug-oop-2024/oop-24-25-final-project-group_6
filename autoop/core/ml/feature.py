@@ -2,6 +2,16 @@ class Feature(object):
     """
     Feature class that handles the name and the type of a feature column.
     """
+    """"""
+    @property
+    def name(self) -> str:
+        """
+        Getter for the private name attribute
+
+        Returns:
+            str: The value of the private attributre name.
+        """
+        return self._name
 
     @property
     def type(self) -> str:
@@ -52,7 +62,7 @@ class Feature(object):
             None
         """
         self.type = type
-        self.name = name
+        self._name = name
 
     def __str__(self) -> str:
         """

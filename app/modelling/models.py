@@ -50,12 +50,6 @@ def is_valid_target_for_prediction(
             metric_result = result[1]
 
             match metric:
-                case "MeanSquaredError":
-                    if abs(metric_result) > 0.2:
-                        return "MeanSquaredError higher than 0.2"
-                case "MeanAbsoluteError":
-                    if abs(metric_result) > 0.4:
-                        return "MeanAbsoluteError higher than 0.35"
                 case "RSquared":
                     if abs(metric_result) < 0.6:
                         return "RSquared lower than 0.6"
@@ -67,8 +61,8 @@ def is_valid_target_for_prediction(
 
             match metric:
                 case "Accuracy":
-                    if abs(metric_result) < 0.6:
-                        return "Accuracy lower than 0.6"
+                    if abs(metric_result) < 0.5:
+                        return "Accuracy lower than 0.5"
                 case "Precision":
                     if abs(metric_result) < 0.5:
                         return "Precision lower than 0.5"

@@ -16,5 +16,4 @@ def predict(model: Model, dataset: Dataset) -> None:
         predictions = model.predict(dataset.read())
         st.write(predictions)
     except Exception as e:
-        st.error("Wrong file format, please provide a valid format.")
         st.error(e)

@@ -24,11 +24,15 @@ def select_model(feature: Feature) -> Model:
         Model: The model that is selected from the streamlit selection box.
     """
     if feature.type == "categorical":
-        selected_model = st.selectbox("Choose a model:",
-                                      options=CLASSIFICATION_MODELS)
+        selected_model = st.selectbox(
+            "Choose a model:",
+            options=CLASSIFICATION_MODELS,
+        )
     else:
-        selected_model = st.selectbox("Choose model:",
-                                      options=REGRESSION_MODELS)
+        selected_model = st.selectbox(
+            "Choose model:",
+            options=REGRESSION_MODELS,
+        )
     selected_model = get_model(selected_model)
     return selected_model
 

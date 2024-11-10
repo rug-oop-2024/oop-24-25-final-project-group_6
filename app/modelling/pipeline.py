@@ -8,7 +8,6 @@ from autoop.core.ml.feature import Feature
 from autoop.core.ml.metric import Metric
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.artifact import Artifact
-from autoop.functional.feature import detect_feature_types
 from app.modelling.models import is_valid_target_for_prediction
 
 from autoop.core.ml.metric import (
@@ -49,12 +48,14 @@ def select_metrics(feature: Feature) -> List[Metric]:
     if feature.type == "categorical":
         selected_metric_names: List[str] = st.multiselect(
             "Choose metrics to evaluate the model:",
-            options=CLASSIFICATION_METRICS
+            options=CLASSIFICATION_METRICS,
+            default="accuracy"
         )
     else:
         selected_metric_names: List[str] = st.multiselect(
             "Choose metrics to evaluate the model:",
-            options=REGRESSION_METRICS
+            options=REGRESSION_METRICS,
+            default="r_squared"
         )
     selected_metrics: List[Metric] = [get_metric(metric) for metric in
                                       selected_metric_names]
@@ -64,7 +65,8 @@ def select_metrics(feature: Feature) -> List[Metric]:
 
 def display_pipeline_summary(
         selected_dataset: Dataset,
-        selected_feature: Feature,
+        selected_target: Feature,
+        selected_input_columns: List[Feature],
         split_ratio: float,
         selected_metrics: List[Metric],
         selected_model: Model
@@ -91,13 +93,21 @@ def display_pipeline_summary(
         st.error("❌ No dataset selected. Selecting a dataset is required to "
                  "proceed.")
 
-    st.subheader("**📂 Feature column**")
-    if selected_feature:
-        st.write(f"**Name**: {selected_feature.name}")
-        st.write(f"**Type**: {selected_feature.type}")
+    st.subheader("**📂Feature columns**")
+    st.markdown("##### 🌠 Target column")
+    if selected_target:
+        st.write(f"**Name**: {selected_target.name}")
+        st.write(f"**Type**: {selected_target.type}")
     else:
-        st.error("❌ No feature column selected. Selecting a training"
-                 " - feature column is required to proceed.")
+        st.error("❌ No feature column selected. Selecting a"
+                 " target column is required to proceed.")
+    st.markdown("##### 🌌 Input columns")
+    if selected_input_columns:
+        st.write(", ".join(f"{feature.name} ({feature.type})" for feature
+                 in selected_input_columns))
+    else:
+        st.error("❌ No input columns selected. Selecting"
+                 " input columns is required to proceed.")
 
     st.subheader("🧮 Training - Test split")
     if split_ratio:
@@ -130,7 +140,8 @@ def train_pipeline(
         split_ratio: float,
         metrics: List[Metric],
         model: Model,
-        target_feature: Feature
+        target_feature: Feature,
+        input_features: List[Feature]
 ) -> Tuple[Pipeline, bool] | None:
     """Train a machine learning pipeline using the selected dataset,
     model, split ratio, metrics, and target feature.
@@ -141,15 +152,13 @@ def train_pipeline(
         metrics (List[Metric]): A list of evaluation metrics.
         model (Model): The machine learning model to be trained.
         target_feature (Feature): The target feature for prediction.
+        input_features (List[Feature]): The input features for prediction.
 
     Returns:
         Tuple[Pipeline, str]: First variable is the pipeline that is created,
         the second variable is whether the target column is valid for
         prediction.
     """
-    input_features = [feature for feature in
-                      detect_feature_types(selected_dataset)
-                      if feature != target_feature]
     try:
         pipeline = Pipeline(
             metrics=metrics,
@@ -213,6 +222,7 @@ def save_pipeline(
     """
     st.subheader("💾 Save Pipeline")
     pipeline_name = st.text_input("Enter the name for your pipeline:")
+
     version = st.text_input("Enter the version for your pipeline:")
 
     if st.button("Save Pipeline"):
@@ -228,7 +238,7 @@ def save_pipeline(
                     dataset
                 ])
                 pipelines_artifact = Artifact(
-                    name=pipeline_name,
+                    name=pipeline_name + ".pkl",
                     type="pipeline",
                     version=version,
                     asset_path=pipeline_name + ".pkl",

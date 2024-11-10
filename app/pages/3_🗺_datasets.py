@@ -69,5 +69,7 @@ if selected_dataset_name is not None:
 
     if delete_button:
         automl.registry.delete(selected_dataset.id)
+        st.session_state.is_saved = False
+        st.rerun()
 else:
     st.write("No dataset selected or available.")

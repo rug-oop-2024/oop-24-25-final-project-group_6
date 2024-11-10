@@ -1,6 +1,5 @@
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
-from autoop.functional.feature import detect_feature_types
 
 from typing import List, Dict
 
@@ -31,7 +30,7 @@ def select_dataset(datasets: List[Dataset]) -> Dataset:
     return dataset_contents[selected_dataset_name]
 
 
-def select_features(features: List[Feature]) -> Feature:
+def select_target_column(features: List[Feature]) -> Feature:
     """
     Function for selecting features from a list of features. The selection of
     the feature is displayed in a selection box in streamlit.
@@ -41,11 +40,27 @@ def select_features(features: List[Feature]) -> Feature:
         to be selected from.
 
     Returns:
-        Dataset: The selected feature from the streamlit selectbox.
+        Feature: The selected feature from the streamlit selectbox.
     """
-    feature_columns: List[Feature] = detect_feature_types(features)
+    selected_target_column: Feature = st.selectbox("Select a target column:",
+                                                   options=features)
 
-    selected_feature_column: Feature = st.selectbox("Select a feature column:",
-                                                    options=feature_columns)
+    return selected_target_column
 
-    return selected_feature_column
+
+def select_input_columns(features: List[Feature]) -> Feature:
+    """
+    Function for selecting input features from a list of features. The
+    selection of the feature is displayed in a multiselection box in streamlit.
+
+    Args:
+        features (List[Feature]): A list of features from which input features
+        have to selected from.
+
+    Returns:
+        Feature: The selected features from the streamlit multiselectbox.
+    """
+    selected_input_columns: Feature = st.multiselect("Select input columns:",
+                                                     options=features)
+
+    return selected_input_columns

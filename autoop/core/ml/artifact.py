@@ -85,7 +85,7 @@ class Artifact():
 
         encoded_path = base64.b64encode(self.asset_path.encode()).decode()
         path = f"{encoded_path}_{self.version}"
-        self.id = path.strip("=")
+        self.id = path.replace("=", "")
 
     @property
     def id(self) -> str:

@@ -45,6 +45,7 @@ def deployment_page(available_pipelines: List[Artifact]) -> None:
     metrics = None
     dataset = None
     target_feature = None
+    input_features = None
     split = None
     model = None
 
@@ -56,16 +57,18 @@ def deployment_page(available_pipelines: List[Artifact]) -> None:
         elif artifact.name == "pipeline_config":
             pipeline_data = pkl.loads(artifact.data)
             target_feature: Feature = pipeline_data["target_feature"]
+            input_features: List[Feature] = pipeline_data["input_features"]
             split: float = pipeline_data["split"]
         elif artifact.name.startswith("pipeline_model"):
             model = get_model(artifact.metadata["model_name"])
 
     display_pipeline_summary(
         selected_dataset=dataset,
-        selected_feature=target_feature,
+        selected_target=target_feature,
         split_ratio=split,
         selected_metrics=metrics,
-        selected_model=model
+        selected_model=model,
+        selected_input_columns=input_features
     )
 
     train_pipeline(
@@ -73,7 +76,8 @@ def deployment_page(available_pipelines: List[Artifact]) -> None:
         split_ratio=split,
         metrics=metrics,
         model=model,
-        target_feature=target_feature
+        target_feature=target_feature,
+        input_features=input_features
     )
 
     st.header("Predictions")
